@@ -6,43 +6,28 @@ import numpy as np
 from .data_set import DataSet
 
 
-def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, feature='silhouettes'):
-    data_dir = osp.join(dataset_path, resolution, dataset, feature)
+def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, cache=True):
     seq_dir = list()
     view = list()
     seq_type = list()
     label = list()
-    dirpath_set = set()
 
-    for label_dir in os.listdir(data_dir):
-        label_dir_path=osp.join(data_dir,label_dir)
-        for seq_type_dir in os.listdir(label_dir_path):
-            seq_type_dir_path=osp.join(label_dir_path,seq_type_dir)
-            for view_dir in os.listdir(seq_type_dir_path):
-                view_dir_path=osp.join(seq_type_dir_path,view_dir)
-                for frame in os.listdir(view_dir_path):
-                    if frame[-3:] == 'jpg':
-                        dirpath_set.add(view_dir_path)
-                        break
-
-
-    dirpath_set=sorted(list(dirpath_set))
-    for dirpath in dirpath_set:
-        _label, _seq_type, _view = dirpath.split('/')[-3:]
+    for _label in sorted(list(os.listdir(dataset_path))):
         # In CASIA-B, data of subject #5 is incomplete.
         # Thus, we ignore it in training.
-        if _label == '005':
+        if dataset == 'CASIA-B' and _label == '005':
             continue
-        _seq_dir = list()
-        _path = osp.join(data_dir, _label, _seq_type, _view)
-        if osp.isdir(_path) and len(os.listdir(_path)) != 0:
-            _seq_dir.append(osp.abspath(_path))
-
-        if len(_seq_dir) == 1:
-            seq_dir.append(_seq_dir)
-            label.append(_label)
-            seq_type.append(_seq_type)
-            view.append(_view)
+        label_path = osp.join(dataset_path, _label)
+        for _seq_type in sorted(list(os.listdir(label_path))):
+            seq_type_path = osp.join(label_path, _seq_type)
+            for _view in sorted(list(os.listdir(seq_type_path))):
+                _seq_dir = osp.join(seq_type_path, _view)
+                seqs = os.listdir(_seq_dir)
+                if len(seqs) > 0:
+                    seq_dir.append([_seq_dir])
+                    label.append(_label)
+                    seq_type.append(_seq_type)
+                    view.append(_view)
 
     pid_fname = osp.join('partition', '{}_{}_{}.npy'.format(
         dataset, pid_num, pid_shuffle))
@@ -57,18 +42,17 @@ def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, feature='
     pid_list = np.load(pid_fname)
     train_list = pid_list[0]
     test_list = pid_list[1]
-
     train_source = DataSet(
         [seq_dir[i] for i, l in enumerate(label) if l in train_list],
         [label[i] for i, l in enumerate(label) if l in train_list],
         [seq_type[i] for i, l in enumerate(label) if l in train_list],
         [view[i] for i, l in enumerate(label)
-         if l in train_list])
+         if l in train_list], cache)
     test_source = DataSet(
         [seq_dir[i] for i, l in enumerate(label) if l in test_list],
         [label[i] for i, l in enumerate(label) if l in test_list],
         [seq_type[i] for i, l in enumerate(label) if l in test_list],
         [view[i] for i, l in enumerate(label)
-         if l in test_list])
+         if l in test_list], cache)
 
     return train_source, test_source
