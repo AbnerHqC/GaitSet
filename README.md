@@ -28,7 +28,7 @@ Download [CASIA-B Dataset](http://www.cbsr.ia.ac.cn/english/Gait%20Databases.asp
 **ATTENTION**
 - Organize the directory as: 
 `your_dataset_path/resolutions/dataset_names/subject_ids/walking_conditions/views`.
-E.g. `gaitdata/64/CASIA-B/001/nm-01/000/`.
+E.g. `gaitdata/64/CASIA-B/001/nm-01/000/`. (We will update the code to be more compatible.)
 - You should cut and align the raw silhouette by yourself. Our experiments use the align method in 
 [this paper](https://ipsjcva.springeropen.com/articles/10.1186/s41074-018-0039-6).
 
