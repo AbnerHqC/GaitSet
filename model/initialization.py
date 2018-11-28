@@ -35,7 +35,7 @@ def initialize_model(config, train_source, test_source):
     model_param['save_name'] = '_'.join(map(str,[
         model_config['model_name'],
         data_config['dataset'],
-        data_config['features'],
+        ['silhouettes'],
         data_config['pid_num'],
         data_config['pid_shuffle'],
         model_config['hidden_dim'],

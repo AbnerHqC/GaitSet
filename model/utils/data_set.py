@@ -3,6 +3,7 @@ import numpy as np
 import os.path as osp
 import os
 import pickle
+import cv2
 import xarray as xr
 
 
@@ -46,16 +47,13 @@ class DataSet(tordata.Dataset):
         return self.__getitem__(index)
 
     def __loader__(self, path):
-        file_path = osp.join(path, os.listdir(path)[0])
-        seq = pickle.load(open(file_path, 'rb'))
-        data_type = seq.attrs['data_type']
+        seq=self.img2xarray(path)
         data_name = seq.name
         if data_name in self.selector:
             seq = seq.loc.__getitem__(tuple(self.selector[data_name]))
-        if data_type == 'img':
-            seq = seq.astype('float32')
-            seq /= 255.0
-            seq = seq[:, :, 10:54]
+        seq = seq.astype('float32')
+        seq /= 255.0
+        seq = seq[:, :, 10:54]
         return seq
 
     def __getitem__(self, index):
@@ -68,6 +66,20 @@ class DataSet(tordata.Dataset):
             self.frame_set[index] = frame_set
         return self.data[index], self.frame_set[index], self.view[
             index], self.seq_type[index], self.label[index],
+
+
+    def img2xarray(self,flie_path):
+        imgs=os.listdir(flie_path)
+        frame_num=len(imgs)
+        num_list=[imgs[i][-7:-4] for i in range(frame_num-1)]
+        frame_list=[cv2.imread(osp.join(flie_path,imgs[i]))[:,:,0] for i in range(frame_num-1)]
+        data_dict=xr.DataArray(
+            frame_list,
+            coords={'frame':num_list},
+            dims=['frame','img_y','img_x'],
+            name='silhouettes'
+        )
+        return data_dict
 
     def __len__(self):
         return len(self.label)

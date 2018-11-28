@@ -5,7 +5,6 @@ conf = {
         'dataset_path': "your_dataset_path",
         'resolution': '64',
         'dataset': 'CASIA-B',
-        'features': ['silhouettes'],
         # In CASIA-B, data of subject #5 is incomplete.
         # Thus, we ignore it in training.
         # For more detail, please refer to

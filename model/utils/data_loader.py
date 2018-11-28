@@ -6,36 +6,46 @@ import numpy as np
 from .data_set import DataSet
 
 
-def load_data(dataset_path, resolution, dataset, features, pid_num, pid_shuffle):
-    data_dir = osp.join(dataset_path, resolution, dataset)
+def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, feature='silhouettes'):
+    data_dir = osp.join(dataset_path, resolution, dataset, feature)
     seq_dir = list()
     view = list()
     seq_type = list()
     label = list()
+    dirpath_set = set()
 
-    _feature_dir = osp.join(data_dir, features[0])
-    for (dirpath, dirnames, filenames) in os.walk(_feature_dir):
-        if len(dirnames) != 0:
-            continue
+    for label_dir in os.listdir(data_dir):
+        label_dir_path=osp.join(data_dir,label_dir)
+        for seq_type_dir in os.listdir(label_dir_path):
+            seq_type_dir_path=osp.join(label_dir_path,seq_type_dir)
+            for view_dir in os.listdir(seq_type_dir_path):
+                view_dir_path=osp.join(seq_type_dir_path,view_dir)
+                for frame in os.listdir(view_dir_path):
+                    if frame[-3:] == 'jpg':
+                        dirpath_set.add(view_dir_path)
+                        break
+
+
+    dirpath_set=sorted(list(dirpath_set))
+    for dirpath in dirpath_set:
         _label, _seq_type, _view = dirpath.split('/')[-3:]
         # In CASIA-B, data of subject #5 is incomplete.
         # Thus, we ignore it in training.
         if _label == '005':
             continue
         _seq_dir = list()
-        for _feature in features:
-            _path = osp.join(data_dir, _feature, _label, _seq_type, _view)
-            if osp.isdir(_path) and len(os.listdir(_path)) != 0:
-                _seq_dir.append(osp.abspath(_path))
+        _path = osp.join(data_dir, _label, _seq_type, _view)
+        if osp.isdir(_path) and len(os.listdir(_path)) != 0:
+            _seq_dir.append(osp.abspath(_path))
 
-        if len(_seq_dir) == len(features):
+        if len(_seq_dir) == 1:
             seq_dir.append(_seq_dir)
             label.append(_label)
             seq_type.append(_seq_type)
             view.append(_view)
 
-    pid_fname = osp.join('partition', '{}_{}_{}_{}.npy'.format(
-        dataset, features, pid_num, pid_shuffle))
+    pid_fname = osp.join('partition', '{}_{}_{}.npy'.format(
+        dataset, pid_num, pid_shuffle))
     if not osp.exists(pid_fname):
         pid_list = sorted(list(set(label)))
         if pid_shuffle:
