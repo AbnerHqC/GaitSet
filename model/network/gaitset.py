@@ -31,14 +31,14 @@ class SetNet(nn.Module):
         self.bin_num = [1, 2, 4, 8, 16]
         self.fc_bin = nn.ParameterList([
             nn.Parameter(
-                nn.init.xavier_uniform(
+                nn.init.xavier_uniform_(
                     torch.zeros(sum(self.bin_num) * 2, 128, hidden_dim)))])
 
         for m in self.modules():
             if isinstance(m, (nn.Conv2d, nn.Conv1d)):
-                nn.init.xavier_uniform(m.weight.data)
+                nn.init.xavier_uniform_(m.weight.data)
             elif isinstance(m, nn.Linear):
-                nn.init.xavier_uniform(m.weight.data)
+                nn.init.xavier_uniform_(m.weight.data)
                 nn.init.constant(m.bias.data, 0.0)
             elif isinstance(m, (nn.BatchNorm2d, nn.BatchNorm1d)):
                 nn.init.normal(m.weight.data, 1.0, 0.02)

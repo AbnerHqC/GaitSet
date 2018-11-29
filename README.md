@@ -30,7 +30,7 @@ Noted that our code is tested based on PyTorch 0.4
 ### Dataset & Preparation
 Download [CASIA-B Dataset](http://www.cbsr.ia.ac.cn/english/Gait%20Databases.asp)
 
-<font color=red>**\*\*\*ATTENTION\*\*\***</font>
+**\*\*\*ATTENTION\*\*\***
 - Organize the directory as: 
 `your_dataset_path/subject_ids/walking_conditions/views`.
 E.g. `CASIA-B/001/nm-01/000/`.

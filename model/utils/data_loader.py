@@ -47,12 +47,14 @@ def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, cache=Tru
         [label[i] for i, l in enumerate(label) if l in train_list],
         [seq_type[i] for i, l in enumerate(label) if l in train_list],
         [view[i] for i, l in enumerate(label)
-         if l in train_list], cache)
+         if l in train_list],
+        cache, resolution)
     test_source = DataSet(
         [seq_dir[i] for i, l in enumerate(label) if l in test_list],
         [label[i] for i, l in enumerate(label) if l in test_list],
         [seq_type[i] for i, l in enumerate(label) if l in test_list],
         [view[i] for i, l in enumerate(label)
-         if l in test_list], cache)
+         if l in test_list],
+        cache, resolution)
 
     return train_source, test_source

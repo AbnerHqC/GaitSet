@@ -8,12 +8,14 @@ import xarray as xr
 
 
 class DataSet(tordata.Dataset):
-    def __init__(self, seq_dir, label, seq_type, view, cache):
+    def __init__(self, seq_dir, label, seq_type, view, cache, resolution):
         self.seq_dir = seq_dir
         self.view = view
         self.seq_type = seq_type
         self.label = label
-        self.cache =cache
+        self.cache = cache
+        self.resolution = int(resolution)
+        self.cut_padding = int(float(resolution)/64*10)
         self.data_size = len(self.label)
         self.data = [None] * self.data_size
         self.frame_set = [None] * self.data_size
@@ -47,8 +49,8 @@ class DataSet(tordata.Dataset):
 
     def __loader__(self, path):
         return self.img2xarray(
-            path)[:, :, 10:54].astype(
-            'float32')/255.0
+            path)[:, :, self.cut_padding:-self.cut_padding].astype(
+            'float32') / 255.0
 
     def __getitem__(self, index):
         # pose sequence sampling
@@ -71,7 +73,9 @@ class DataSet(tordata.Dataset):
 
     def img2xarray(self, flie_path):
         imgs = sorted(list(os.listdir(flie_path)))
-        frame_list = [cv2.imread(osp.join(flie_path, _img_path))[:, :, 0]
+        frame_list = [np.reshape(
+            cv2.imread(osp.join(flie_path, _img_path)),
+            [self.resolution, self.resolution, -1])[:, :, 0]
                       for _img_path in imgs
                       if osp.isfile(osp.join(flie_path, _img_path))]
         num_list = list(range(len(frame_list)))
