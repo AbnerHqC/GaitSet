@@ -7,10 +7,10 @@ from datetime import datetime
 
 import numpy as np
 import torch
+import torch.nn as nn
 import torch.autograd as autograd
 import torch.optim as optim
 import torch.utils.data as tordata
-from sync_batchnorm import DataParallelWithCallback
 
 from .network import TripletLoss, SetNet
 from .utils import TripletSampler
@@ -55,9 +55,9 @@ class Model:
         self.img_size = img_size
 
         self.encoder = SetNet(self.hidden_dim).float()
-        self.encoder = DataParallelWithCallback(self.encoder)
+        self.encoder = nn.DataParallel(self.encoder)
         self.triplet_loss = TripletLoss(self.P * self.M, self.hard_or_full_trip, self.margin).float()
-        self.triplet_loss = DataParallelWithCallback(self.triplet_loss)
+        self.triplet_loss = nn.DataParallel(self.triplet_loss)
         self.encoder.cuda()
         self.triplet_loss.cuda()
 
