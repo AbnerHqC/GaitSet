@@ -87,8 +87,9 @@ It will output Rank@1 of all three walking conditions.
 Note that the test is **parallelizable**. 
 To conduct a faster evaluation, you could use `--batch_size` to change the batch size for test.
 
-### Transformation
-A script for transforming a set of silhouettes into a discriminative representation will be released soon.
+## To Do List
+- Pretreatment: The script for the pretreatment of CASIA-B dataset.
+- Transformation: The script for transforming a set of silhouettes into a discriminative representation.
 
 
 ## Authors & Contributors
