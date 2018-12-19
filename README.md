@@ -56,7 +56,7 @@ E.g. `CASIA-B/001/nm-01/000/`.
 - **Step2:** Cut and align the raw silhouettes with `pretreatment.py`.
 (See [pretreatment](#pretreatment) for details.)
 Welcome to try different ways of pretreatment but note that
-the sample after pretreatment **MUST have a size of 64x64**.
+the silhouettes after pretreatment **MUST have a size of 64x64**.
 
 Futhermore, you also can test our code on [OU-MVLP Dataset](http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html).
 The number of channels and the training batchsize is slightly different for this dataset.
