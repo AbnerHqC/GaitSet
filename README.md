@@ -22,6 +22,10 @@ With 8 NVIDIA 1080TI GPUs, it only takes **7 minutes** to conduct an evaluation 
 [OU-MVLP](http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html) which contains 133,780 sequences
 and average 70 frames per sequence.
 
+## What's new
+The script for pretreatment has been released.
+See [Dataset & Preparation](#dataset--preparation) for details.
+
 ## Prerequisites
 
 - Python 3.6
@@ -105,9 +109,7 @@ Note that the test is **parallelizable**.
 To conduct a faster evaluation, you could use `--batch_size` to change the batch size for test.
 
 ## To Do List
-- Pretreatment: The script for the pretreatment of CASIA-B dataset.
 - Transformation: The script for transforming a set of silhouettes into a discriminative representation.
-
 
 ## Authors & Contributors
 GaitSet is authored by
