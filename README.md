@@ -18,7 +18,7 @@ and  **Rank@1=87.1%** on [OU-MVLP](http://www.am.sanken.osaka-u.ac.jp/BiometricD
 excluding  identical-view cases.
 
 #### Fast
-With 8 NVIDIA 1080TI GPUs, It only takes **7 minutes** to conduct an evaluation on
+With 8 NVIDIA 1080TI GPUs, it only takes **7 minutes** to conduct an evaluation on
 [OU-MVLP](http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html) which contains 133,780 sequences
 and average 70 frames per sequence.
 
@@ -43,17 +43,34 @@ Noted that our code is tested based on [PyTorch 0.4](http://pytorch.org/)
 Download [CASIA-B Dataset](http://www.cbsr.ia.ac.cn/english/Gait%20Databases.asp)
 
 **!!! ATTENTION !!! ATTENTION !!! ATTENTION !!!**
-- Organize the directory as: 
+
+Before training or test, please make sure you have prepared the dataset
+by this two steps:
+- **Step1:** Organize the directory as: 
 `your_dataset_path/subject_ids/walking_conditions/views`.
 E.g. `CASIA-B/001/nm-01/000/`.
-- You need to cut and align the raw silhouettes in the dataset before you can use it.
-Our experiments used the alignment method in 
-[this paper](https://ipsjcva.springeropen.com/articles/10.1186/s41074-018-0039-6).
-- The input sample **MUST be resized into 64x64**
+- **Step2:** Cut and align the raw silhouettes with `pretreatment.py`.
+(See [pretreatment](#pretreatment) for details.)
+Welcome to try different ways of pretreatment but note that
+the sample after pretreatment **MUST have a size of 64x64**.
 
 Futhermore, you also can test our code on [OU-MVLP Dataset](http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html).
 The number of channels and the training batchsize is slightly different for this dataset.
 For more detail, please refer to [our paper](https://arxiv.org/abs/1811.06186).
+
+#### Pretreatment
+`pretreatment.py` uses the alignment method in
+[this paper](https://ipsjcva.springeropen.com/articles/10.1186/s41074-018-0039-6).
+Pretreatment your dataset by
+```
+python pretreatment.py --input_path='root_path_of_raw_dataset' --output_path='root_path_for_output'
+```
+- `--input_path` **(NECESSARY)** Root path of raw dataset.
+- `--output_path` **(NECESSARY)** Root path for output.
+- `--log_file` Log file path. #Default: './pretreatment.log'
+- `--log` If set as True, all logs will be saved. 
+Otherwise, only warnings and errors will be saved. #Default: False
+- `--worker_num` How many subprocesses to use for data pretreatment. Default: 1
 
 ### Configuration 
 
@@ -74,7 +91,7 @@ This will accelerate the training.
 even they have been used in the former iterations. #Default: TRUE
 
 ### Evaluation
-Use trained model to extract feature by
+Evaluate the trained model by
 ```bash
 python test.py
 ```
