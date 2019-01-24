@@ -130,7 +130,7 @@ and Kun Wang.
 ## Citation
 Please cite these papers in your publications if it helps your research:
 ```
-@inproceedings{cao2017realtime,
+@inproceedings{chao2019gaitset,
   author = {Chao, Hanqing and He, Yiwei and Zhang, Junping and Feng, Jianfeng},
   booktitle = {AAAI},
   title = {{GaitSet}: Regarding Gait as a Set for Cross-View Gait Recognition},
