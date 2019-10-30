@@ -26,8 +26,8 @@ With 8 NVIDIA 1080TI GPUs, it only takes **7 minutes** to conduct an evaluation 
 and average 70 frames per sequence.
 
 ## What's new
-The script for pretreatment has been released.
-See [Dataset & Preparation](#dataset--preparation) for details.
+The code and checkpoint for OUMVLP dataset have been released.
+See [OUMVLP](#oumvlp) for details.
 
 ## Prerequisites
 
@@ -110,6 +110,13 @@ This might accelerate the testing. #Default: FALSE
 It will output Rank@1 of all three walking conditions. 
 Note that the test is **parallelizable**. 
 To conduct a faster evaluation, you could use `--batch_size` to change the batch size for test.
+
+#### OUMVLP
+Since the huge differences between OUMVLP and CASIA-B, the network setting on OUMVLP is slightly different.
+- The alternated network's code can be found at `./work/OUMVLP_network`. Use them to replace the corresponding files in `./model/network`.
+- The checkpoint can be found [here](https://1drv.ms/u/s!AurT2TsSKdxQuWN8drzIv_phTR5m?e=Gfbl3m).
+- In `./config.py`, modify `'batch_size': (8, 16)` into `'batch_size': (32,16)`.
+- Prepare your OUMVLP dataset according to the instructions in [Dataset & Preparation](#dataset--preparation).
 
 ## To Do List
 - Transformation: The script for transforming a set of silhouettes into a discriminative representation.
