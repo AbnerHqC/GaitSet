@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
+# utils class: TripletLoss
 class TripletLoss(nn.Module):
     def __init__(self, batch_size, hard_or_full, margin):
         super(TripletLoss, self).__init__()
