@@ -6,7 +6,9 @@ import pickle
 import cv2
 import xarray as xr
 
-
+# extend torch.utils.data.Dataset,
+# Build the dataset implementation for gait recognition,
+# which include the parameters: label, type[NM, BG, CL], sequence id, view angle.
 class DataSet(tordata.Dataset):
     def __init__(self, seq_dir, label, seq_type, view, cache, resolution):
         self.seq_dir = seq_dir
@@ -15,18 +17,22 @@ class DataSet(tordata.Dataset):
         self.label = label
         self.cache = cache
         self.resolution = int(resolution)
+        # cut_padding = 10
         self.cut_padding = int(float(resolution)/64*10)
         self.data_size = len(self.label)
         self.data = [None] * self.data_size
         self.frame_set = [None] * self.data_size
 
+        # remove duplicated value
         self.label_set = set(self.label)
         self.seq_type_set = set(self.seq_type)
         self.view_set = set(self.view)
+        # Return a new array of given shape and type, filled with zeros.
         _ = np.zeros((len(self.label_set),
                       len(self.seq_type_set),
                       len(self.view_set))).astype('int')
         _ -= 1
+        # DataArray(values, Coordinates, dims)
         self.index_dict = xr.DataArray(
             _,
             coords={'label': sorted(list(self.label_set)),
@@ -38,6 +44,8 @@ class DataSet(tordata.Dataset):
             _label = self.label[i]
             _seq_type = self.seq_type[i]
             _view = self.view[i]
+            # Attribute for location based indexing. Only supports __getitem__,
+            # and only when the key is a dict of the form {dim: labels}.
             self.index_dict.loc[_label, _seq_type, _view] = i
 
     def load_all_data(self):
@@ -47,11 +55,13 @@ class DataSet(tordata.Dataset):
     def load_data(self, index):
         return self.__getitem__(index)
 
+    # load the image to xarray
     def __loader__(self, path):
         return self.img2xarray(
             path)[:, :, self.cut_padding:-self.cut_padding].astype(
             'float32') / 255.0
 
+    # overwrite the getitem function in the subclass
     def __getitem__(self, index):
         # pose sequence sampling
         if not self.cache:
@@ -71,8 +81,16 @@ class DataSet(tordata.Dataset):
         return data, frame_set, self.view[
             index], self.seq_type[index], self.label[index],
 
+    # Image to Xarray
     def img2xarray(self, flie_path):
         imgs = sorted(list(os.listdir(flie_path)))
+        # [:,:,0] Take the first dimension of the 3D data
+        # [:,:,1] Take the second dimension of the 3D data
+        # np.reshape the image data to [64, 64, -1]
+        # When using a -1, the dimension corresponding to the -1
+        # will be the product of the dimensions of the original array
+        # divided by the product of the dimensions given to reshape
+        # so as to maintain the same number of elements.
         frame_list = [np.reshape(
             cv2.imread(osp.join(flie_path, _img_path)),
             [self.resolution, self.resolution, -1])[:, :, 0]
@@ -86,5 +104,6 @@ class DataSet(tordata.Dataset):
         )
         return data_dict
 
+    # overwrite the len function in the subclass
     def __len__(self):
         return len(self.label)

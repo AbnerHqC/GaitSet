@@ -4,7 +4,8 @@ import numpy as np
 
 from .basic_blocks import SetBlock, BasicConv2d
 
-
+# extended from pytorch Neural network package,
+# torchc.nn.Module: Base class for all neural network modules.
 class SetNet(nn.Module):
     def __init__(self, hidden_dim):
         super(SetNet, self).__init__()
@@ -13,6 +14,11 @@ class SetNet(nn.Module):
 
         _set_in_channels = 1
         _set_channels = [32, 64, 128]
+        # BasicConv2d(self, inChannel, outChannel, kernelSize, **kwargs)
+        # SetBlock(self, forward_block)
+        # Modules can also contain other Modules, allowing to nest them in a tree structure.
+        # So, in the GaitSet, the forward_block is BasicConv2D,
+        # that means the BasicConv2d modules nested in the SetBlock Module.
         self.set_layer1 = SetBlock(BasicConv2d(_set_in_channels, _set_channels[0], 5, padding=2))
         self.set_layer2 = SetBlock(BasicConv2d(_set_channels[0], _set_channels[0], 3, padding=1), True)
         self.set_layer3 = SetBlock(BasicConv2d(_set_channels[0], _set_channels[1], 3, padding=1))
@@ -29,6 +35,12 @@ class SetNet(nn.Module):
         self.gl_pooling = nn.MaxPool2d(2)
 
         self.bin_num = [1, 2, 4, 8, 16]
+        # torch.nn.ParameterList can be indexed like a regular Python list,
+        # but parameters it contains are properly registered,
+        # and will be visible by all Module methods.
+        #
+        # nn.init.xavier_uniform_: Fills the input Tensor with values.
+        # See https://pytorch.org/docs/stable/nn.init.html
         self.fc_bin = nn.ParameterList([
             nn.Parameter(
                 nn.init.xavier_uniform_(
@@ -44,6 +56,7 @@ class SetNet(nn.Module):
                 nn.init.normal(m.weight.data, 1.0, 0.02)
                 nn.init.constant(m.bias.data, 0.0)
 
+    # The max(·) function proposed in the paper;
     def frame_max(self, x):
         if self.batch_frame is None:
             return torch.max(x, 1)
@@ -56,6 +69,7 @@ class SetNet(nn.Module):
             arg_max_list = torch.cat([_tmp[i][1] for i in range(len(_tmp))], 0)
             return max_list, arg_max_list
 
+    # The median(·) function proposed in the paper;
     def frame_median(self, x):
         if self.batch_frame is None:
             return torch.median(x, 1)
@@ -67,6 +81,7 @@ class SetNet(nn.Module):
             median_list = torch.cat([_tmp[i][0] for i in range(len(_tmp))], 0)
             arg_median_list = torch.cat([_tmp[i][1] for i in range(len(_tmp))], 0)
             return median_list, arg_median_list
+
 
     def forward(self, silho, batch_frame=None):
         # n: batch_size, s: frame_num, k: keypoints_num, c: channel

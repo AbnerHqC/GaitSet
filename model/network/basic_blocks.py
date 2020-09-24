@@ -2,6 +2,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# Standard write method in doc:
+# https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module
+# Assign the submodules as regular attributes.
+
+# BasicConv2d defined a basic 2d convolutional layer
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, **kwargs):
         super(BasicConv2d, self).__init__()
@@ -11,7 +16,7 @@ class BasicConv2d(nn.Module):
         x = self.conv(x)
         return F.leaky_relu(x, inplace=True)
 
-
+# SetBlock defined a
 class SetBlock(nn.Module):
     def __init__(self, forward_block, pooling=False):
         super(SetBlock, self).__init__()

@@ -55,12 +55,16 @@ class Model:
         self.img_size = img_size
 
         self.encoder = SetNet(self.hidden_dim).float()
+        # DataParallel Layers (multi-GPU, distributed)
+        # Implements data parallelism at the module level.
         self.encoder = nn.DataParallel(self.encoder)
         self.triplet_loss = TripletLoss(self.P * self.M, self.hard_or_full_trip, self.margin).float()
         self.triplet_loss = nn.DataParallel(self.triplet_loss)
+        # Moves all model parameters and buffers to the GPU.
         self.encoder.cuda()
         self.triplet_loss.cuda()
 
+        # Construct a optimizer by Adam Algorithm.
         self.optimizer = optim.Adam([
             {'params': self.encoder.parameters()},
         ], lr=self.lr)
@@ -149,6 +153,7 @@ class Model:
         _time1 = datetime.now()
         for seq, view, seq_type, label, batch_frame in train_loader:
             self.restore_iter += 1
+            # Clears the gradients of all optimized torch.Tensor s.
             self.optimizer.zero_grad()
 
             for i in range(len(seq)):
@@ -251,6 +256,7 @@ class Model:
 
         return np.concatenate(feature_list, 0), view_list, seq_type_list, label_list
 
+    # Save trained model.
     def save(self):
         os.makedirs(osp.join('checkpoint', self.model_name), exist_ok=True)
         torch.save(self.encoder.state_dict(),
