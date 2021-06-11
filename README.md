@@ -3,7 +3,7 @@
 [![LICENSE](https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 
-[GaitSet](https://arxiv.org/abs/1811.06186) is a **flexible**, **effective** and **fast** network for cross-view gait recognition.
+GaitSet is a **flexible**, **effective** and **fast** network for cross-view gait recognition. The [paper](https://ieeexplore.ieee.org/document/9351667) has been published on IEEE TPAMI.
 
 #### Flexible 
 The input of GaitSet is a set of silhouettes. 
@@ -140,15 +140,17 @@ and Kun Wang.
 ## Citation
 Please cite these papers in your publications if it helps your research:
 ```
-@inproceedings{chao2019gaitset,
-  author = {Chao, Hanqing and He, Yiwei and Zhang, Junping and Feng, Jianfeng},
-  booktitle = {AAAI},
-  title = {{GaitSet}: Regarding Gait as a Set for Cross-View Gait Recognition},
-  year = {2019}
-}
+@ARTICLE{chao2019gaitset,
+  author={Chao, Hanqing and Wang, Kun and He, Yiwei and Zhang, Junping and Feng, Jianfeng},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={GaitSet: Cross-view Gait Recognition through Utilizing Gait as a Deep Set}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={1-1}}
 ```
 Link to paper:
-- [GaitSet: Regarding Gait as a Set for Cross-View Gait Recognition](https://arxiv.org/abs/1811.06186)
+- [GaitSet: Cross-view Gait Recognition through Utilizing Gait as a Deep Set](https://ieeexplore.ieee.org/document/9351667)
 
 
 ## License
