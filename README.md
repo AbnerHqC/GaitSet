@@ -145,9 +145,8 @@ Please cite these papers in your publications if it helps your research:
   journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
   title={GaitSet: Cross-view Gait Recognition through Utilizing Gait as a Deep Set}, 
   year={2021},
-  volume={},
-  number={},
-  pages={1-1}}
+  pages={1-1},
+  doi={10.1109/TPAMI.2021.3057879}}
 ```
 Link to paper:
 - [GaitSet: Cross-view Gait Recognition through Utilizing Gait as a Deep Set](https://ieeexplore.ieee.org/document/9351667)
