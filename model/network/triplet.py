@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
+# utils class: TripletLoss
 class TripletLoss(nn.Module):
     def __init__(self, batch_size, hard_or_full, margin):
         super(TripletLoss, self).__init__()
@@ -12,8 +12,8 @@ class TripletLoss(nn.Module):
     def forward(self, feature, label):
         # feature: [n, m, d], label: [n, m]
         n, m, d = feature.size()
-        hp_mask = (label.unsqueeze(1) == label.unsqueeze(2)).byte().view(-1)
-        hn_mask = (label.unsqueeze(1) != label.unsqueeze(2)).byte().view(-1)
+        hp_mask = (label.unsqueeze(1) == label.unsqueeze(2)).bool().view(-1)
+        hn_mask = (label.unsqueeze(1) != label.unsqueeze(2)).bool().view(-1)
 
         dist = self.batch_dist(feature)
         mean_dist = dist.mean(1).mean(1)
