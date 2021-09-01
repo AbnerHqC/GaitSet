@@ -1,8 +1,9 @@
 conf = {
-    "WORK_PATH": "./work",
-    "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+    "WORK_PATH": "/content/drive/Shareddrives/NCKH 2021/checkpoints1",
+    # (Ly) In Colab, we only have 1 GPU
+    "CUDA_VISIBLE_DEVICES": "0",
     "data": {
-        'dataset_path': "your_dataset_path",
+        'dataset_path': "/content/output",
         'resolution': '64',
         'dataset': 'CASIA-B',
         # In CASIA-B, data of subject #5 is incomplete.
