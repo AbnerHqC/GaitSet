@@ -13,7 +13,9 @@ class TripletLoss(nn.Module):
         # feature: [n, m, d], label: [n, m]
         n, m, d = feature.size()
         hp_mask = (label.unsqueeze(1) == label.unsqueeze(2)).byte().view(-1)
+        hp_mask = hp_mask.bool()
         hn_mask = (label.unsqueeze(1) != label.unsqueeze(2)).byte().view(-1)
+        hn_mask = hn_mask.bool()
 
         dist = self.batch_dist(feature)
         mean_dist = dist.mean(1).mean(1)

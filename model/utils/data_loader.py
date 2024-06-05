@@ -32,14 +32,16 @@ def load_data(dataset_path, resolution, dataset, pid_num, pid_shuffle, cache=Tru
     pid_fname = osp.join('partition', '{}_{}_{}.npy'.format(
         dataset, pid_num, pid_shuffle))
     if not osp.exists(pid_fname):
+        print('Partition file {} does not exist. Creating...'.format(pid_fname))
         pid_list = sorted(list(set(label)))
         if pid_shuffle:
             np.random.shuffle(pid_list)
         pid_list = [pid_list[0:pid_num], pid_list[pid_num:]]
         os.makedirs('partition', exist_ok=True)
-        np.save(pid_fname, pid_list)
+        arr = np.asarray(pid_list, dtype = object)
+        np.save(pid_fname, arr)
 
-    pid_list = np.load(pid_fname)
+    pid_list = np.load(pid_fname, allow_pickle=True)
     train_list = pid_list[0]
     test_list = pid_list[1]
     train_source = DataSet(

@@ -1,8 +1,8 @@
 conf = {
     "WORK_PATH": "./work",
-    "CUDA_VISIBLE_DEVICES": "0,1,2,3",
+    "CUDA_VISIBLE_DEVICES": "0",
     "data": {
-        'dataset_path': "your_dataset_path",
+        'dataset_path': "/home/nfcbx/GaitSet/DataSet/OutDataSet",
         'resolution': '64',
         'dataset': 'CASIA-B',
         # In CASIA-B, data of subject #5 is incomplete.
@@ -16,7 +16,7 @@ conf = {
         'hidden_dim': 256,
         'lr': 1e-4,
         'hard_or_full_trip': 'full',
-        'batch_size': (8, 16),
+        'batch_size': (2, 16),
         'restore_iter': 0,
         'total_iter': 80000,
         'margin': 0.2,
